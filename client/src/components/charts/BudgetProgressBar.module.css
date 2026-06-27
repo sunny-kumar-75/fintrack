@@ -1,0 +1,79 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.labelWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.icon {
+  font-size: 1.25rem;
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.amounts {
+  display: flex;
+  align-items: baseline;
+}
+
+.spent {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.limit {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  margin-left: 4px;
+}
+
+.track {
+  height: 8px;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease-out, background-color 0.3s ease;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-xs);
+}
+
+.remaining {
+  color: var(--color-text-secondary);
+}
+
+.overspent {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-medium);
+}
+
+.percentage {
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-medium);
+}
