@@ -9,16 +9,17 @@ import styles from './QuickAdd.module.css';
 
 export default function QuickAdd() {
   const [isOpen, setIsOpen] = useState(false);
-  const [categories, setCategories] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   
+  const [type, setType] = useState('expense');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState(null);
 
   const containerRef = useRef(null);
 
   useEffect(() => {
-    if (isOpen && categories.length === 0) {
+    if (isOpen && allCategories.length === 0) {
       fetchCategories();
     }
   }, [isOpen]);
@@ -50,7 +51,7 @@ export default function QuickAdd() {
     try {
       const data = await getCategories();
       if (data.success) {
-        setCategories(data.categories.filter(c => c.type === 'expense' || c.type === 'both'));
+        setAllCategories(data.categories);
       }
     } catch (err) {
       console.error(err);
@@ -70,7 +71,7 @@ export default function QuickAdd() {
     setLoading(true);
     try {
       await createTransaction({
-        type: 'expense',
+        type,
         amount: Number(amount),
         category: { name: category.name, icon: category.icon },
         date: new Date().toISOString().split('T')[0],
@@ -88,12 +89,31 @@ export default function QuickAdd() {
     }
   };
 
+    const displayCategories = allCategories.filter(c => c.type === type || c.type === 'both');
+
   return (
     <div className={styles.container} ref={containerRef}>
       {isOpen && (
         <div className={styles.popup}>
           <div className={styles.header}>
-            <div className={styles.title}>Quick Expense</div>
+            <div className={styles.title}>Quick Add</div>
+          </div>
+
+          <div className={styles.toggleGroup}>
+            <button 
+              type="button"
+              className={`${styles.toggleBtn} ${type === 'expense' ? styles.toggleBtnActive : ''}`}
+              onClick={() => { setType('expense'); setCategory(null); }}
+            >
+              Expense
+            </button>
+            <button 
+              type="button"
+              className={`${styles.toggleBtn} ${type === 'income' ? styles.toggleBtnActive : ''}`}
+              onClick={() => { setType('income'); setCategory(null); }}
+            >
+              Income
+            </button>
           </div>
 
           <form onSubmit={handleSubmit} className={styles.form}>
@@ -109,12 +129,12 @@ export default function QuickAdd() {
             />
 
             <div className={styles.categories}>
-              {loading && categories.length === 0 ? (
+              {loading && allCategories.length === 0 ? (
                 <div style={{ color: 'var(--color-text-tertiary)', fontSize: '12px', padding: '10px' }}>Loading...</div>
-              ) : categories.length === 0 ? (
+              ) : displayCategories.length === 0 ? (
                 <div style={{ color: 'var(--color-text-tertiary)', fontSize: '12px', padding: '10px' }}>No categories available</div>
               ) : (
-                categories.slice(0, 8).map(cat => (
+                displayCategories.slice(0, 8).map(cat => (
                   <div 
                     key={cat._id}
                     className={`${styles.catBtn} ${category?.name === cat.name ? styles.catBtnSelected : ''}`}
